@@ -30,10 +30,11 @@ public class Game {
         frame.add(textPanel, BorderLayout.NORTH);
 
         //button
+        boardPanel.setLayout(new GridLayout(3, 3));
+
         for (int i = 0; i < 9; i++) {
             JButton title = new JButton();
             board[i] = title;
-            boardPanel.add(board[i]);
             boardPanel.add(title);
             frame.add(boardPanel);
 
