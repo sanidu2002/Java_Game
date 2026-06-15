@@ -8,6 +8,7 @@ public class Game {
 
     JFrame frame = new JFrame();
     JLabel textLabel = new JLabel();
+    JLabel timerLabel = new JLabel();
     JPanel textPanel = new JPanel();
 
     JButton[] board = new JButton[9];
@@ -22,7 +23,10 @@ public class Game {
 
     Timer setAnimeTimer;
     Timer hideAnimeTimer;
-
+    Timer gameTimer;
+    
+    int timeLeft = 60;
+    boolean gameActive = true;
 
 
 
@@ -38,8 +42,15 @@ public class Game {
 
         //JLabel
         textLabel.setText("Score: 00");
-        textLabel.setFont(new Font("Arial", Font.PLAIN,50));
+        textLabel.setFont(new Font("Arial", Font.PLAIN, 50));
+        
+        timerLabel.setText("Time: 60s");
+        timerLabel.setFont(new Font("Arial", Font.PLAIN, 40));
+        timerLabel.setForeground(Color.RED);
+        
+        textPanel.setLayout(new FlowLayout());
         textPanel.add(textLabel);
+        textPanel.add(timerLabel);
         frame.add(textPanel, BorderLayout.NORTH);
 
         //Image Icon
@@ -61,7 +72,7 @@ public class Game {
             title.setIcon(hammerIcon);
             
             title.addActionListener(e -> {
-                if (title.getIcon() == animeIcon) {
+                if (gameActive && title.getIcon() == animeIcon) {
                     title.setIcon(hammerIcon);
                     int score = Integer.parseInt(textLabel.getText().replaceAll("[^0-9]", ""));
                     textLabel.setText("Score: " + (score + 10));
@@ -75,25 +86,76 @@ public class Game {
 
         //timer - Show animal at random position
         setAnimeTimer = new Timer(1000, event -> {
-            // Hide previous animal if any
-            if(currentAnimeTile != null){
-                currentAnimeTile.setIcon(hammerIcon);
+            if (gameActive) {
+                // Hide previous animal if any
+                if(currentAnimeTile != null){
+                    currentAnimeTile.setIcon(hammerIcon);
+                }
+                
+                // Show animal at random position
+                int randomIndex = random.nextInt(9);
+                currentAnimeTile = board[randomIndex];
+                currentAnimeTile.setIcon(animeIcon);
             }
-            
-            // Show animal at random position
-            int randomIndex = random.nextInt(9);
-            currentAnimeTile = board[randomIndex];
-            currentAnimeTile.setIcon(animeIcon);
         });
         
         //timer - Hide animal after 800ms
         hideAnimeTimer = new Timer(800, event -> {
-            if(currentAnimeTile != null){
+            if(currentAnimeTile != null && gameActive){
                 currentAnimeTile.setIcon(hammerIcon);
             }
         });
+        
+        //timer - 60 second countdown timer
+        gameTimer = new Timer(1000, event -> {
+            timeLeft--;
+            timerLabel.setText("Time: " + timeLeft + "s");
+            
+            if (timeLeft <= 0) {
+                gameActive = false;
+                setAnimeTimer.stop();
+                hideAnimeTimer.stop();
+                gameTimer.stop();
+                
+                // Hide the current animal if any
+                if(currentAnimeTile != null){
+                    currentAnimeTile.setIcon(hammerIcon);
+                }
+                
+                // Get final score
+                int finalScore = Integer.parseInt(textLabel.getText().replaceAll("[^0-9]", ""));
+                
+                // Show game over dialog
+                JDialog gameOverDialog = new JDialog(frame, "Game Over!", true);
+                gameOverDialog.setSize(300, 200);
+                gameOverDialog.setLocationRelativeTo(frame);
+                gameOverDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                
+                JPanel dialogPanel = new JPanel(new BorderLayout());
+                dialogPanel.setBackground(Color.WHITE);
+                
+                JLabel scoreLabel = new JLabel("Final Score: " + finalScore);
+                scoreLabel.setFont(new Font("Arial", Font.BOLD, 30));
+                scoreLabel.setHorizontalAlignment(JLabel.CENTER);
+                
+                JButton restartButton = new JButton("Restart Game");
+                restartButton.setFont(new Font("Arial", Font.PLAIN, 18));
+                restartButton.addActionListener(restartEvent -> {
+                    gameOverDialog.dispose();
+                    frame.dispose();
+                    new Game();
+                });
+                
+                dialogPanel.add(scoreLabel, BorderLayout.CENTER);
+                dialogPanel.add(restartButton, BorderLayout.SOUTH);
+                gameOverDialog.add(dialogPanel);
+                gameOverDialog.setVisible(true);
+            }
+        });
+        
         hideAnimeTimer.start();
         setAnimeTimer.start();
+        gameTimer.start();
 
         frame.setVisible(true);
     }
