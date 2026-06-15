@@ -20,7 +20,7 @@ public class Game {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("Tic Tac Toe");
+        frame.setTitle("My Game");
         frame.setLayout(new BorderLayout());
 
         //JLabel
