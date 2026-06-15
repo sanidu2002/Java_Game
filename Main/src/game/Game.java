@@ -1,5 +1,6 @@
 package game;
 import javax.swing.*;
+import java.awt.*;
 
 public class Game {
 
@@ -20,6 +21,8 @@ public class Game {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Tic Tac Toe");
+        frame.setLayout(new BorderLayout());
+
 
 
 
