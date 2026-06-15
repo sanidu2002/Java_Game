@@ -29,7 +29,16 @@ public class Game {
         textPanel.add(textLabel);
         frame.add(textPanel, BorderLayout.NORTH);
 
+        //button
+        for (int i = 0; i < 9; i++) {
+            JButton title = new JButton();
+            board[i] = title;
+            boardPanel.add(board[i]);
+            boardPanel.add(title);
+            frame.add(boardPanel);
 
+
+        }
 
 
 
