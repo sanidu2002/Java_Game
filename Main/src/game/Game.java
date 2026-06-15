@@ -11,6 +11,9 @@ public class Game {
     JButton[] board = new JButton[9];
     JPanel boardPanel = new JPanel();
 
+    ImageIcon animeIcon;
+    ImageIcon hammerIcon;
+
 
 
     public Game() {
