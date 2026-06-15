@@ -23,6 +23,13 @@ public class Game {
         frame.setTitle("Tic Tac Toe");
         frame.setLayout(new BorderLayout());
 
+        //JLabel
+        textLabel.setText("Score: 00");
+        textLabel.setFont(new Font("Arial", Font.PLAIN,50));
+        textPanel.add(textLabel);
+        frame.add(textPanel, BorderLayout.NORTH);
+
+
 
 
 
